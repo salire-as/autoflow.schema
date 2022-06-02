@@ -1,11 +1,15 @@
 {
-  "name": "@salire-aiflow/flow-schema",
+  "name": "@salire-aiflow/autoflow.schema",
   "version": "1.0.0",
   "description": "Schema description for AutoFlow",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
   "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/salire-aiflow/autoflow.schema.git"
+  },
   "devDependencies": {
     "@types/lodash": "4.14.182",
     "nodemon": "2.0.16",
