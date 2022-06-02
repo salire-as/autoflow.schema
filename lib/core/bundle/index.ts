@@ -1,7 +1,7 @@
-import { FRequest } from "../f";
+import { ResponseObject } from "../f";
 
 export interface Bundle {
-  rawRequest?: FRequest;
+  rawRequest?: ResponseObject;
   input?: Record<string, unknown>;
   auth?: unknown;
 }

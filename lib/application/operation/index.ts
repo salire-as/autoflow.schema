@@ -9,6 +9,8 @@ export enum REQUEST_METHOD {
   PATCH = "PATCH",
 }
 
+export type OperationMethod = "run" | "runSubscribe" | "runUnsubscribe";
+
 export interface RequestOperation {
   method: REQUEST_METHOD;
   url: string;
@@ -18,7 +20,7 @@ export interface RequestOperation {
 export type RequestFunction = (f: F, bundle: Bundle) => unknown;
 
 export interface Operation {
-  run?: RequestOperation | RequestFunction;
+  run: RequestOperation | RequestFunction;
   runSubscribe?: RequestOperation | RequestFunction;
   runUnsubscribe?: RequestOperation | RequestFunction;
 }
