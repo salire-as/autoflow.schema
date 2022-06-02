@@ -15,6 +15,9 @@ export interface RequestOperation {
   method: REQUEST_METHOD;
   url: string;
   headers?: Record<string, string>;
+  params?: Record<string, string>;
+  query?: Record<string, string>;
+  data?: unknown;
 }
 
 export type RequestFunction = (f: F, bundle: Bundle) => unknown;

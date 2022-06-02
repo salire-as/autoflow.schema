@@ -1,6 +1,7 @@
 import { Application, RequestOperation } from "../../application";
 import { executeMiddleware } from "../middleware";
 import axios from "axios";
+import { defaults } from "lodash";
 export interface ResponseObject {
   data: unknown;
   status: number;
@@ -21,7 +22,12 @@ export class F {
   async request(options: RequestOperation) {
     const possiblyMutatedOptions = await executeMiddleware(
       this.app.befores,
-      options,
+      defaults<RequestOperation, Partial<RequestOperation>>(options, {
+        headers: {},
+        params: {},
+        query: {},
+        data: null,
+      }),
       this
     );
 
