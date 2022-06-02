@@ -1,0 +1,14 @@
+# source
+lib
+**/*.ts
+*.ts
+
+# configuration
+yarn.lock
+package-lock.json
+tslint.json
+tsconfig.json
+tsconfig-cjs.json
+tsconfig.spec.json
+.prettierrc
+.gitignore
