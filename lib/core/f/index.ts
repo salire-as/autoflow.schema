@@ -2,14 +2,12 @@ import { Application, RequestOperation } from "../../application";
 import { executeMiddleware } from "../middleware";
 import axios from "axios";
 import { defaults } from "lodash";
+import { cleanResponse } from "../cleanResponse";
 export interface ResponseObject {
   data: unknown;
   status: number;
   statusText: string;
-  request: {
-    query?: Record<string, unknown>;
-    headers?: Record<string, string | number | boolean>;
-  };
+  request: RequestOperation;
 }
 
 export class F {
@@ -33,6 +31,12 @@ export class F {
 
     const response = await axios(possiblyMutatedOptions);
 
-    return executeMiddleware(this.app.afters, response, this);
+    const possiblyMutatedResponse = await executeMiddleware(
+      this.app.afters,
+      cleanResponse(response),
+      this
+    );
+
+    return possiblyMutatedResponse;
   }
 }
