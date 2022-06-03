@@ -1,3 +1,4 @@
+import { Bundle } from "../bundle";
 import { F } from "../f";
 
 export const applyMiddleware = <T>(middleware: T[] | undefined, apply: T[]) => {
@@ -10,7 +11,8 @@ export const executeMiddleware = async <
 >(
   middleware: MiddlewareFunction[] | undefined,
   input: Input,
-  f: F
+  f: F,
+  bundle: Bundle
 ) => {
   let possiblyMutatedInput: Input = input;
   if (!middleware) return input;
@@ -18,7 +20,7 @@ export const executeMiddleware = async <
   f.isMiddleware = true;
 
   for (const fn of middleware) {
-    possiblyMutatedInput = await fn(possiblyMutatedInput, f);
+    possiblyMutatedInput = await fn(possiblyMutatedInput, f, bundle);
   }
 
   f.isMiddleware = false;

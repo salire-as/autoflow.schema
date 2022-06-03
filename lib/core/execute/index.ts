@@ -24,8 +24,9 @@ export const execute = async (
 
   const method = get(app, event.method) as RequestOperation | RequestFunction;
 
-  const f = new F(app);
   let bundle = event.bundle;
+
+  const f = new F(app, bundle);
 
   /**
    * TODO:
