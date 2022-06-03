@@ -1,6 +1,6 @@
 import { Application, RequestOperation } from "../../application";
 import { executeMiddleware } from "../middleware";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { defaults } from "lodash";
 import { cleanResponse } from "../cleanResponse";
 
@@ -47,39 +47,44 @@ export class F {
    * A promise based HTTP client that gives you full control over the request and response.
    */
   public async request(options: RequestOperation) {
-    let possiblyMutatedOptions: RequestOperation = options;
+    try {
+      let possiblyMutatedOptions: RequestOperation = options;
 
-    if (!this.isMiddleware) {
-      possiblyMutatedOptions = await executeMiddleware(
-        this.app.befores,
-        defaults<RequestOperation, Partial<RequestOperation>>(options, {
-          headers: {},
-          params: {},
-          query: {},
-          data: null,
-        }),
-        this
-      );
+      if (!this.isMiddleware) {
+        possiblyMutatedOptions = await executeMiddleware(
+          this.app.befores,
+          defaults<RequestOperation, Partial<RequestOperation>>(options, {
+            headers: {},
+            params: {},
+            query: {},
+            data: null,
+          }),
+          this
+        );
+      }
+
+      const response = await axios(possiblyMutatedOptions);
+
+      this.httpRequests.push({
+        ...cleanResponse(response),
+        request: possiblyMutatedOptions,
+        executedAt: new Date(),
+      });
+
+      let possiblyMutatedResponse: ResponseObject = response;
+
+      if (!this.isMiddleware) {
+        possiblyMutatedResponse = await executeMiddleware(
+          this.app.afters,
+          cleanResponse(response),
+          this
+        );
+      }
+
+      return possiblyMutatedResponse;
+    } catch (err) {
+      const response = err as AxiosError;
+      return cleanResponse(response);
     }
-
-    const response = await axios(possiblyMutatedOptions);
-
-    this.httpRequests.push({
-      ...cleanResponse(response),
-      request: possiblyMutatedOptions,
-      executedAt: new Date(),
-    });
-
-    let possiblyMutatedResponse: ResponseObject = response;
-
-    if (!this.isMiddleware) {
-      possiblyMutatedResponse = await executeMiddleware(
-        this.app.afters,
-        cleanResponse(response),
-        this
-      );
-    }
-
-    return possiblyMutatedResponse;
   }
 }
