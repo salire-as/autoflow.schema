@@ -2,3 +2,4 @@
 .yalc
 yalc.lock
 dist
+yarn-error.log

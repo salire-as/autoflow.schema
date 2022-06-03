@@ -15,9 +15,13 @@ export const executeMiddleware = async <
   let possiblyMutatedInput: Input = input;
   if (!middleware) return input;
 
+  f.isMiddleware = true;
+
   for (const fn of middleware) {
     possiblyMutatedInput = await fn(possiblyMutatedInput, f);
   }
+
+  f.isMiddleware = false;
 
   return possiblyMutatedInput;
 };

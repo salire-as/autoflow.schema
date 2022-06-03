@@ -17,7 +17,8 @@
     "outDir": "dist/esm",
     "sourceMap": true,
     "allowJs": true,
-    "lib": ["es7", "DOM"]
+    "lib": ["es7", "DOM"],
+    "strictNullChecks": true
   },
   "include": ["lib/**/*"],
   "exclude": ["node_modules"]

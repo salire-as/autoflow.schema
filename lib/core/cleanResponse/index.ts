@@ -4,7 +4,6 @@ import { ResponseObject } from "../f";
 export const cleanResponse = (
   response: AxiosResponse | AxiosError
 ): ResponseObject => {
-  console.log(response);
   if (response instanceof Error) {
     return {
       data: response.response?.data,
@@ -24,6 +23,9 @@ export const cleanResponse = (
       status: response.status,
       statusText: response.statusText,
       request: {
+        /**
+         * TODO: These fields are not mapped correctly
+         */
         method: response?.request?.method,
         url: response?.request?.url,
         headers: response?.request?.headers,
