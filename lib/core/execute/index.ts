@@ -34,8 +34,9 @@ export const execute = async (
    * - Logging should be done with an universal log function, for the developer to see the logs outside of the Lambda.
    *
    * - General error handling should be implemented. Errors and logic for doing retries are performed
-   *   in the @salire-aiflow/autoflow.runner to not leak logic into this package.  ------
+   *   in the @salire-aiflow/autoflow.runner to not leak logic into this package.
    */
+
   let output: unknown;
   if (isFunction(method)) {
     output = await method(f, event.bundle);
