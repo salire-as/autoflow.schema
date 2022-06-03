@@ -5,12 +5,13 @@ import {
   RequestFunction,
 } from "../../application";
 import { ExecutionEvent } from "../event";
-import { F, ResponseObject } from "../f";
+import { F, Log, ResponseObject } from "../f";
 import { prepareApp } from "../prepareApp";
 
 export interface LambdaResponse {
   output: unknown;
   requests: ResponseObject[];
+  logs: Log[];
 }
 
 export const execute = async (
@@ -25,14 +26,6 @@ export const execute = async (
 
   /**
    * TODO:
-   * - The method functions should return the response `data` as outputs and not the whole ResponseObject.
-   *   This is because the developer might want to change the data that is returned to AutoFlow from the response.
-   *   See example in test app.
-   *   `f` class should keep track of all the requests that are done in a method and the ResponeObjects that belongs to it,
-   *   and add this data to the execution step instead.
-   *
-   * - Logging should be done with an universal log function, for the developer to see the logs outside of the Lambda.
-   *
    * - General error handling should be implemented. Errors and logic for doing retries are performed
    *   in the @salire-aiflow/autoflow.runner to not leak logic into this package.
    */
@@ -50,5 +43,6 @@ export const execute = async (
   return {
     output,
     requests: f.httpRequests,
+    logs: f.logs,
   };
 };
