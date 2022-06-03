@@ -5,6 +5,7 @@ import {
   Before,
 } from "../../application";
 import { applyMiddleware } from "../middleware";
+import { includeBearerToken } from "../middleware/includeBearerToken";
 import { throwForAuthError } from "../middleware/throwForAuthError";
 
 export const prepareApp = (app: Application) => {
@@ -13,9 +14,10 @@ export const prepareApp = (app: Application) => {
 
   if (
     app.authentication?.type === AUTHENTICATION_TYPE.OAUTH2 &&
-    app.authentication.oauth2?.autoRefresh
+    app.authentication.oauth2
   ) {
-    afters.push(throwForAuthError);
+    befores.push(includeBearerToken);
+    app.authentication.oauth2.autoRefresh && afters.push(throwForAuthError);
   }
 
   app.befores = applyMiddleware(app.befores, befores);
