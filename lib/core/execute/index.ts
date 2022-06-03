@@ -4,6 +4,7 @@ import {
   RequestOperation,
   RequestFunction,
 } from "../../application";
+import { Bundle } from "../bundle";
 import { ExecutionEvent } from "../event";
 import { F, Log, ResponseObject } from "../f";
 import { prepareApp } from "../prepareApp";
@@ -12,6 +13,7 @@ export interface LambdaResponse {
   output: unknown;
   requests: ResponseObject[];
   logs: Log[];
+  bundle: Bundle;
 }
 
 export const execute = async (
@@ -23,17 +25,20 @@ export const execute = async (
   const method = get(app, event.method) as RequestOperation | RequestFunction;
 
   const f = new F(app);
+  let bundle = event.bundle;
 
   /**
    * TODO:
    * - General error handling should be implemented. Errors and logic for doing retries are performed
    *   in the @salire-aiflow/autoflow.runner to not leak logic into this package.
    */
-
   let output: unknown;
   if (isFunction(method)) {
-    output = await method(f, event.bundle);
+    output = await method(f, bundle);
   } else if (isObject(method) && method.url) {
+    /**
+     * TODO: method object needs to be parsed for curlies
+     */
     const response = await f.request(method);
     output = response.data;
   } else {
@@ -44,5 +49,6 @@ export const execute = async (
     output,
     requests: f.httpRequests,
     logs: f.logs,
+    bundle,
   };
 };
