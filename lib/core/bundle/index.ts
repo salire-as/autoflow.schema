@@ -7,4 +7,7 @@ export interface Bundle {
   subscribeData?: unknown;
   redirectUrl?: string;
   targetUrl?: string;
+  process: {
+    env: Record<string, string>;
+  };
 }
