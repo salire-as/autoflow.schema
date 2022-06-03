@@ -9,7 +9,15 @@ export enum REQUEST_METHOD {
   PATCH = "PATCH",
 }
 
-export type OperationMethod = "run" | "runSubscribe" | "runUnsubscribe";
+export type OperationMethod =
+  | "run"
+  | "runSubscribe"
+  | "runUnsubscribe"
+  | "authorizeUrl"
+  | "getAccessToken"
+  | "refreshAccessToken";
+
+export type OperationType = "actions" | "triggers" | "authentication";
 
 export interface RequestOperation {
   method: REQUEST_METHOD;

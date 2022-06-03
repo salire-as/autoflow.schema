@@ -1,13 +1,13 @@
-import { RequestOperation } from "../operation";
+import { RequestFunction, RequestOperation } from "../operation";
 
 export enum AUTHENTICATION_TYPE {
   OAUTH2 = "OAUTH2",
 }
 
 interface OAuth2Operation {
-  authorizeUrl: RequestOperation;
-  getAccessToken: RequestOperation;
-  refreshAccessToken?: RequestOperation;
+  authorizeUrl: RequestOperation | RequestFunction;
+  getAccessToken: RequestOperation | RequestFunction;
+  refreshAccessToken?: RequestOperation | RequestFunction;
   scope?: string;
   autoRefresh?: boolean;
 }
