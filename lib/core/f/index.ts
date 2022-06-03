@@ -3,6 +3,7 @@ import { executeMiddleware } from "../middleware";
 import axios, { AxiosError } from "axios";
 import { defaults } from "lodash";
 import { cleanResponse } from "../cleanResponse";
+import { Bundle } from "../bundle";
 
 export interface ResponseObject {
   data: unknown;
@@ -19,8 +20,9 @@ export interface Log {
 
 export class F {
   private app: Application;
+  private bundle: Bundle;
 
-  constructor(app: Application) {
+  constructor(app: Application, bundle: Bundle) {
     this.app = app;
   }
 
@@ -59,7 +61,8 @@ export class F {
             query: {},
             data: null,
           }),
-          this
+          this,
+          this.bundle
         );
       }
 
@@ -77,7 +80,8 @@ export class F {
         possiblyMutatedResponse = await executeMiddleware(
           this.app.afters,
           cleanResponse(response),
-          this
+          this,
+          this.bundle
         );
       }
 

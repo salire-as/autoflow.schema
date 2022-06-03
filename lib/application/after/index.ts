@@ -1,6 +1,7 @@
-import { F, ResponseObject } from "../../core";
+import { Bundle, F, ResponseObject } from "../../core";
 
 export type After = (
   response: ResponseObject,
-  f: F
+  f: F,
+  bundle: Bundle
 ) => ResponseObject | Promise<ResponseObject>;
