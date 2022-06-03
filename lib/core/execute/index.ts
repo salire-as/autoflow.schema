@@ -7,6 +7,7 @@ import {
 import { Bundle } from "../bundle";
 import { ExecutionEvent } from "../event";
 import { F, Log, ResponseObject } from "../f";
+import { loadEnvs } from "../loadEnvs";
 import { prepareApp } from "../prepareApp";
 
 export interface LambdaResponse {
@@ -26,13 +27,10 @@ export const execute = async (
 
   let bundle = event.bundle;
 
+  loadEnvs(bundle.process.env);
+
   const f = new F(app, bundle);
 
-  /**
-   * TODO:
-   * - General error handling should be implemented. Errors and logic for doing retries are performed
-   *   in the @salire-aiflow/autoflow.runner to not leak logic into this package.
-   */
   let output: unknown;
   if (isFunction(method)) {
     output = await method(f, bundle);
