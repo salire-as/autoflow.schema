@@ -24,6 +24,7 @@ export class F {
 
   constructor(app: Application, bundle: Bundle) {
     this.app = app;
+    this.bundle = bundle;
   }
 
   public output: unknown = null;
