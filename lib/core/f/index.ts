@@ -12,6 +12,11 @@ export interface ResponseObject {
   executedAt?: Date;
 }
 
+export interface Log {
+  loggedAt: Date;
+  value: string;
+}
+
 export class F {
   private app: Application;
 
@@ -25,7 +30,23 @@ export class F {
 
   public isMiddleware = false;
 
-  async request(options: RequestOperation) {
+  public logs: Log[] = new Array();
+
+  /**
+   * Logs created by your app through the use of the `f.log` method
+   */
+  public log(value: string) {
+    this.logs.push({
+      loggedAt: new Date(),
+      value,
+    });
+  }
+
+  /**
+   *
+   * A promise based HTTP client that gives you full control over the request and response.
+   */
+  public async request(options: RequestOperation) {
     let possiblyMutatedOptions: RequestOperation = options;
 
     if (!this.isMiddleware) {
