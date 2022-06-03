@@ -5,7 +5,7 @@
     "declaration": true,
     "declarationMap": true,
     "skipLibCheck": true,
-    "removeComments": true,
+    "removeComments": false,
     "strict": true,
     "noLib": false,
     "esModuleInterop": true,
