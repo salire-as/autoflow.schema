@@ -8,7 +8,7 @@ export const includeBearerToken = (
   bundle: Bundle
 ) => {
   const authData = bundle.authData as Record<string, string>;
-  if (authData.access_token && request.headers) {
+  if (authData && authData.access_token && request.headers) {
     request.headers["Authorization"] = `Bearer ${authData.access_token}`;
   }
   return request;
