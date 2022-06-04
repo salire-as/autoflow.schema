@@ -15,7 +15,8 @@ export type OperationMethod =
   | "runUnsubscribe"
   | "authorizeUrl"
   | "getAccessToken"
-  | "refreshAccessToken";
+  | "refreshAccessToken"
+  | "test";
 
 export type OperationType = "actions" | "triggers" | "authentication";
 
