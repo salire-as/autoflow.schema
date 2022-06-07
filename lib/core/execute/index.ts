@@ -15,6 +15,8 @@ export interface LambdaResponse {
   requests: ResponseObject[];
   logs: Log[];
   bundle: Bundle;
+  isSuccessful: boolean;
+  error?: Error | unknown;
 }
 
 export const execute = async (
@@ -31,12 +33,28 @@ export const execute = async (
 
   const f = new F(app, bundle);
 
+  /**
+   * We need to handle execution errors here so that the logs, bundle etc are still sent
+   */
+  let isSuccessful = true;
   let output: unknown;
+  let error: unknown = null;
+
   if (isFunction(method)) {
-    output = await method(f, bundle);
+    try {
+      output = await method(f, bundle);
+    } catch (err) {
+      isSuccessful = false;
+      error = err;
+    }
   } else if (isObject(method) && method.url) {
-    const response = await f.request(method);
-    output = response.data;
+    try {
+      const response = await f.request(method);
+      output = response.data;
+    } catch (err) {
+      isSuccessful = false;
+      error = err;
+    }
   } else {
     throw new Error(`Error: Could not find app method ${event.method} to call`);
   }
@@ -46,5 +64,7 @@ export const execute = async (
     requests: f.httpRequests,
     logs: f.logs,
     bundle,
+    isSuccessful: isSuccessful,
+    error,
   };
 };
