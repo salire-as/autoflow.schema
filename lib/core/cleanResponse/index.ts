@@ -5,32 +5,18 @@ export const cleanResponse = (
   response: AxiosResponse | AxiosError
 ): ResponseObject => {
   if (response instanceof Error) {
+    const json = response.toJSON() as any;
     return {
-      data: response.response?.data,
-      status: response.response?.status || 400,
-      statusText: response?.code || "",
-      request: {
-        method: response?.request?.method,
-        url: response?.request?.url,
-        headers: response?.request?.headers,
-        query: response?.request?.query,
-        params: response?.request?.params,
-      },
+      data: null,
+      status: json.status,
+      statusText: json.code,
+      request: json.config,
     };
   } else
     return {
       data: response.data,
       status: response.status,
       statusText: response.statusText,
-      request: {
-        /**
-         * TODO: These fields are not mapped correctly
-         */
-        method: response?.request?.method,
-        url: response?.request?.url,
-        headers: response?.request?.headers,
-        query: response?.request?.query,
-        params: response?.request?.params,
-      },
+      request: response.config as any,
     };
 };
