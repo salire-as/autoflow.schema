@@ -35,9 +35,6 @@ export const execute = async (
   if (isFunction(method)) {
     output = await method(f, bundle);
   } else if (isObject(method) && method.url) {
-    /**
-     * TODO: method object needs to be parsed for curlies
-     */
     const response = await f.request(method);
     output = response.data;
   } else {

@@ -5,6 +5,7 @@ import { defaults } from "lodash";
 import { cleanResponse } from "../cleanResponse";
 import { Bundle } from "../bundle";
 import { curlies } from "../curlies";
+import { RESPONSE_ERROR } from "../errors";
 
 export interface ResponseObject {
   data: unknown;
@@ -46,53 +47,65 @@ export class F {
     });
   }
 
+  private async performRequest(request: RequestOperation) {
+    try {
+      const response = await axios(request);
+      return cleanResponse(response);
+    } catch (err) {
+      /**
+       * TODO: Axios always throws at 400 - 500 status codes. We should throw error here to alert Lambda and to not run the rest of the workflow.
+       */
+      const response = err as AxiosError;
+      return cleanResponse(response);
+    }
+  }
+
   /**
    *
    * A promise based HTTP client that gives you full control over the request and response.
    */
   public async request(options: RequestOperation) {
-    try {
-      let possiblyMutatedOptions: RequestOperation = options;
+    let possiblyMutatedOptions: RequestOperation = options;
 
-      if (!this.isMiddleware) {
-        possiblyMutatedOptions = await executeMiddleware(
-          this.app.befores,
-          defaults<RequestOperation, Partial<RequestOperation>>(options, {
-            headers: {},
-            params: {},
-            query: {},
-            data: null,
-          }),
-          this,
-          this.bundle
-        );
-      }
-
-      const response = await axios(
-        curlies(possiblyMutatedOptions, this.bundle)
+    if (!this.isMiddleware) {
+      possiblyMutatedOptions = await executeMiddleware(
+        this.app.befores,
+        defaults<RequestOperation, Partial<RequestOperation>>(options, {
+          headers: {},
+          params: {},
+          query: {},
+          data: null,
+        }),
+        this,
+        this.bundle
       );
-
-      this.httpRequests.push({
-        ...cleanResponse(response),
-        request: possiblyMutatedOptions,
-        executedAt: new Date(),
-      });
-
-      let possiblyMutatedResponse: ResponseObject = response;
-
-      if (!this.isMiddleware) {
-        possiblyMutatedResponse = await executeMiddleware(
-          this.app.afters,
-          cleanResponse(response),
-          this,
-          this.bundle
-        );
-      }
-
-      return possiblyMutatedResponse;
-    } catch (err) {
-      const response = err as AxiosError;
-      return cleanResponse(response);
     }
+
+    const request = curlies(possiblyMutatedOptions, { bundle: this.bundle });
+
+    const response = await this.performRequest(request);
+
+    this.httpRequests.push({
+      ...response,
+      request,
+      executedAt: new Date(),
+    });
+
+    if (response.status > 299) {
+      throw new RESPONSE_ERROR(response.statusText, response);
+    }
+
+    let possiblyMutatedResponse: ResponseObject = response;
+
+    if (!this.isMiddleware) {
+      possiblyMutatedResponse = await executeMiddleware(
+        this.app.afters,
+        possiblyMutatedResponse,
+        this,
+        this.bundle
+      );
+    }
+
+    return possiblyMutatedResponse;
   }
 }
