@@ -7,7 +7,7 @@ export const cleanResponse = (
   if (response instanceof Error) {
     const json = response.toJSON() as any;
     return {
-      data: null,
+      data: response.response?.data,
       status: json.status,
       statusText: json.code,
       request: json.config,
