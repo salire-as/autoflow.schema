@@ -4,6 +4,7 @@ import axios, { AxiosError } from "axios";
 import { defaults } from "lodash";
 import { cleanResponse } from "../cleanResponse";
 import { Bundle } from "../bundle";
+import { curlies } from "../curlies";
 
 export interface ResponseObject {
   data: unknown;
@@ -67,7 +68,9 @@ export class F {
         );
       }
 
-      const response = await axios(possiblyMutatedOptions);
+      const response = await axios(
+        curlies(possiblyMutatedOptions, this.bundle)
+      );
 
       this.httpRequests.push({
         ...cleanResponse(response),
