@@ -3,3 +3,5 @@
 yalc.lock
 dist
 yarn-error.log
+layer
+.DS_store
