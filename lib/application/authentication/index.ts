@@ -2,6 +2,8 @@ import { RequestFunction, RequestOperation } from "../operation";
 
 export enum AUTHENTICATION_TYPE {
   OAUTH2 = "OAUTH2",
+  SESSION = "SESSION",
+  CUSTOM = "CUSTOM",
 }
 
 interface OAuth2Operation {
@@ -10,6 +12,10 @@ interface OAuth2Operation {
   refreshAccessToken?: RequestOperation | RequestFunction;
   scope?: string;
   autoRefresh?: boolean;
+}
+
+interface SessionOperation {
+  run: RequestOperation | RequestFunction;
 }
 
 export interface Authentication {
@@ -23,5 +29,12 @@ export interface Authentication {
    * Label defines what users see in the list of their authenticated accounts.
    */
   label?: RequestFunction;
+  /**
+   * For authentication that requires OAuth2
+   */
   oauth2?: OAuth2Operation;
+  /**
+   * For authentication that requires session keys
+   */
+  session?: SessionOperation;
 }

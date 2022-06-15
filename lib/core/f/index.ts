@@ -49,7 +49,11 @@ export class F {
 
   private async performRequest(request: RequestOperation) {
     try {
-      const response = await axios(request);
+      const response = await axios({
+        ...request,
+        /* Redirects is not allowed in an app */
+        maxRedirects: 0,
+      });
       return cleanResponse(response);
     } catch (err) {
       /**
