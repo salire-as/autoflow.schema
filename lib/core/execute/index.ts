@@ -1,10 +1,11 @@
-import { get, isFunction, isObject } from "lodash";
+import { get, isFunction, isObject, isString } from "lodash";
 import {
   Application,
   RequestOperation,
   RequestFunction,
 } from "../../application";
 import { Bundle } from "../bundle";
+import { curlies } from "../curlies";
 import { ExecutionEvent } from "../event";
 import { F, Log, ResponseObject } from "../f";
 import { loadEnvs } from "../loadEnvs";
@@ -25,7 +26,10 @@ export const execute = async (
 ): Promise<LambdaResponse> => {
   const app = prepareApp(rawApp);
 
-  const method = get(app, event.method) as RequestOperation | RequestFunction;
+  const method = get(app, event.method) as
+    | RequestOperation
+    | RequestFunction
+    | string;
 
   let bundle = event.bundle;
 
@@ -51,6 +55,13 @@ export const execute = async (
     try {
       const response = await f.request(method);
       output = response.data;
+    } catch (err) {
+      isSuccessful = false;
+      error = err;
+    }
+  } else if (isString(method)) {
+    try {
+      output = curlies(method, bundle);
     } catch (err) {
       isSuccessful = false;
       error = err;

@@ -1,6 +1,6 @@
 {
   "name": "@salire-aiflow/autoflow.schema",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "Schema description for AutoFlow",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
