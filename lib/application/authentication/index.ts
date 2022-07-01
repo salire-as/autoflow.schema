@@ -28,7 +28,7 @@ export interface Authentication {
   /**
    * Label defines what users see in the list of their authenticated accounts.
    */
-  label?: RequestFunction;
+  label?: RequestFunction | string;
   /**
    * For authentication that requires OAuth2
    */
