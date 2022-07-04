@@ -31,13 +31,7 @@ export interface RequestOperation {
 
 export type RequestFunction = (f: F, bundle: Bundle) => unknown;
 
-export enum OPERATION_METHOD {
-  POLLING = "polling",
-  WEBHOOOK = "webhook",
-}
-
 export interface Operation {
-  type?: OPERATION_METHOD;
   run: RequestOperation | RequestFunction;
   runSubscribe?: RequestOperation | RequestFunction;
   runUnsubscribe?: RequestOperation | RequestFunction;
