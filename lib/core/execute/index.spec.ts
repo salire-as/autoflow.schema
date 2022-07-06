@@ -19,7 +19,8 @@ describe("Execute", () => {
       method: "authentication.label",
       bundle: {
         input: {
-          test: "It works",
+          nested: "for nested!",
+          test: "It works {{bundle.input.nested}}",
         },
         process: {
           env: {},
@@ -27,6 +28,6 @@ describe("Execute", () => {
       },
     });
 
-    expect(result.output).toBe("It works");
+    expect(result.output).toBe("It works for nested!");
   });
 });

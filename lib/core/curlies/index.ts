@@ -16,9 +16,11 @@ export const curlies = <
 
   const output = template(replacements);
 
-  if (output.match(/({)?{{[^{}]*}}(?!})/g))
+  if (output.match(/(\{\{.+?\}\})/g)) {
     return curlies(output, replacements, initialValueAsString) as T;
-  else if (initialValueAsString) {
+  } else if (initialValueAsString) {
     return output as T;
-  } else return JSON.parse(output) as T;
+  } else {
+    return JSON.parse(output) as T;
+  }
 };

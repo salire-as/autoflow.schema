@@ -61,7 +61,7 @@ export const execute = async (
     }
   } else if (isString(method)) {
     try {
-      output = curlies(method, { bundle });
+      output = curlies(method, { bundle }, true);
     } catch (err) {
       isSuccessful = false;
       error = err;
