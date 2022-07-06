@@ -33,6 +33,7 @@ export type RequestFunction = (f: F, bundle: Bundle) => unknown;
 
 export interface Operation {
   run: RequestOperation | RequestFunction;
+  runList?: RequestOperation | RequestFunction;
   runSubscribe?: RequestOperation | RequestFunction;
   runUnsubscribe?: RequestOperation | RequestFunction;
 }
