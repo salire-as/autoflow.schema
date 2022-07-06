@@ -26,4 +26,20 @@ describe("Curlies", () => {
 
     expect(output.data.content).toBe("Hello Vemund Eldegard, Oslo");
   });
+
+  it("Parses curlies in a string", () => {
+    const output = curlies(
+      "Hello there {{bundle.input.name}}",
+      {
+        bundle: {
+          input: {
+            name: "Vemund Eldegard",
+          },
+        },
+      },
+      true
+    );
+
+    expect(output).toBe("Hello there Vemund Eldegard");
+  });
 });

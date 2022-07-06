@@ -70,4 +70,31 @@ describe("F", () => {
 
     expect(f.httpRequests).toHaveLength(1);
   });
+
+  it("Will resolve nested curlies in the execution", async () => {
+    const bundle: Bundle = {
+      input: {
+        nested: "923679995",
+        orgnr: "{{bundle.input.nested}}",
+      },
+      process: {
+        env: {},
+      },
+    };
+
+    const f = new F(app, bundle);
+
+    await f.request({
+      url: "https://data.brreg.no/regnskapsregisteret/regnskap/{{bundle.input.orgnr}}",
+      method: REQUEST_METHOD.GET,
+      params: {
+        år: "2021",
+        regnskapstype: "SELSKAP",
+      },
+    });
+
+    expect(f.httpRequests[0].request?.url).toBe(
+      "https://data.brreg.no/regnskapsregisteret/regnskap/923679995"
+    );
+  });
 });
